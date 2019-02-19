@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="https://vjs.zencdn.net/7.4.1/video-js.css" rel="stylesheet">
+    <style>
+        video {
+            width: 720px;
+        }
+    </style>
+</head>
+<body>
+    <p>RTMP 收流（object swf 插件）</p>
+    <div id="playercontainer"></div>
+    <a href="http://www.adobe.com/go/getflashplayer" target="_blank">install</a>
+    <div>
+        <canvas id="canvas"></canvas>
+    </div>
+
+    <script type="text/javascript" src="Baidu-T5Player-SDK-Web-v2.1.1/player/cyberplayer.js"></script>
+    <script type="text/javascript">
+        var player = cyberplayer("playercontainer").setup({
+            width: 680,
+            height: 448,
+            // file: "rtmp://202.69.69.180:443/webcast/bshdlive-pc", // <—rtmp直播地址
+            file: "rtmp://localhost:1935/live/abc", // <—rtmp直播地址
+            autostart: true,
+            stretching: "uniform",
+            volume: 100,
+            controls: true,
+            rtmp: {
+                reconnecttime: 5, // rtmp直播的重连次数
+                bufferlength: 1 // 缓冲多少秒之后开始播放 默认1秒
+            },
+            ak: "41707430fa52422f83b8efdc797f90c1" // 公有云平台注册即可获得accessKey
+        });
+
+        let canvas = document.querySelector("#canvas");
+        function drawCanvas(canvas, objEle) {
+            canvas.width = objEle.offsetWidth;
+            canvas.height = objEle.offsetHeight;
+            let ctx = canvas.getContext('2d');
+            ctx.drawImage(objEle, 0, 0, canvas.width, canvas.height);
+ 
+            // var img = document.createElement("img");
+            // img.src = canvas.toDataURL("image/png");
+            // output.appendChild(img);
+        }
+        
+    </script>
+
+    <!-- <script type="text/javascript">
+        var player = cyberplayer("playercontainer").setup({
+            width: 680,
+            height: 448,
+            isLive: true, // 必须设置，表明是直播视频
+            file: "http://cyberplayerplay.kaywang.cn/cyberplayer/demo201711-L1.m3u8", // <—hls直播地址
+            autostart: true,
+            stretching: "uniform",
+            volume: 100,
+            controls: true,
+            hls: {
+                reconnecttime: 5 // hls直播重连间隔秒数
+            },
+            ak: "41707430fa52422f83b8efdc797f90c1" // 公有云平台注册即可获得accessKey
+        });
+    </script> -->
+
+
+<script src="https://cdn.jsdelivr.net/hls.js/latest/hls.min.js"></script>
+<p>HLS 收流（video 标签）</p>
+<video id="hls_video" controls></video>
+<script>
+    if(Hls.isSupported()) {
+        var video = document.getElementById('hls_video');
+        var hls = new Hls();
+        // hls.loadSource('http://cyberplayerplay.kaywang.cn/cyberplayer/demo201711-L1.m3u8');
+        hls.loadSource('http://localhost:8080/hls/abc.m3u8');
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MANIFEST_PARSED,function() {
+            video.play();
+        });
+    }
+</script>
+
+
+</body>
+</html>
